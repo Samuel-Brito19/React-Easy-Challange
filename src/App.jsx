@@ -15,6 +15,18 @@ import { useState } from 'react';
 // todo - Mostre um alerta caso o login seja efetuado com sucesso (javascript alert). Investigue a função login() para entender como ter sucesso na requisição.
 
 export default function LoginForm() {
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isButtonDisable, setIsButtonDisable] = useState(true)
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value)
+    setIsButtonDisable(e.target.value === '' || email === '')
+  }
+
+
+
   return (
     <div className='wrapper'>
       <div className='login-form'>
@@ -23,7 +35,8 @@ export default function LoginForm() {
         <div className='errorMessage'></div>
         <div className='row'>
           <label htmlFor={'email'}>Email</label>
-          <input id={'email'} type={'email'} autoComplete='off' />
+          <input id={'email'} type={'email'} autoComplete='off' value={email}
+            onChange={handleEmailChange} />
         </div>
         <div className='row'>
           <label htmlFor={'password'}>Password</label>
@@ -31,7 +44,7 @@ export default function LoginForm() {
         </div>
 
         <div className='button'>
-          <button>Login</button>
+          <button disabled={isButtonDisable}>Login</button>
         </div>
       </div>
     </div>
