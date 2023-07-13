@@ -19,20 +19,55 @@ export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isButtonDisable, setIsButtonDisable] = useState(true)
+  const [error, setError] = useState(null)
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value)
     setIsButtonDisable(e.target.value === '' || email === '')
+    updateLogin()
+
+
   }
 
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value)
+    updateLogin()
+    setIsButtonDisable(e.target.value === '' || password.length < 6)
+  }
 
+  const updateLogin = () => {
+    if (email && password) {
+      setIsButtonDisable(false)
+    } else {
+      setIsButtonDisable(true)
+    }
+  }
+
+  const handleLogin = () => {
+    let values = { email: email, password: password }
+    setError(null)
+    setIsButtonDisable(true)
+
+    login(values)
+      .then(() => {
+        console.log(alert(`Congrats ${email}!`))
+      })
+      .catch((error) => {
+        console.log(error)
+        setError(error)
+
+      })
+      .finally(() => {
+        setIsButtonDisable(false)
+      })
+  }
 
   return (
     <div className='wrapper'>
       <div className='login-form'>
         <h1>Login Form 🐞</h1>
         {/* Coloque a mensagem de erro de login na div abaixo. Mostre a div somente se houver uma mensagem de erro. */}
-        <div className='errorMessage'></div>
+        {error && <div className='errorMessage'>{error.message}</div>}
         <div className='row'>
           <label htmlFor={'email'}>Email</label>
           <input id={'email'} type={'email'} autoComplete='off' value={email}
@@ -40,11 +75,11 @@ export default function LoginForm() {
         </div>
         <div className='row'>
           <label htmlFor={'password'}>Password</label>
-          <input id={'password'} type={'password'} />
+          <input id={'password'} type={'password'} value={password} onChange={handlePasswordChange} />
         </div>
 
         <div className='button'>
-          <button disabled={isButtonDisable}>Login</button>
+          <button disabled={isButtonDisable} onClick={handleLogin}>Login</button>
         </div>
       </div>
     </div>
